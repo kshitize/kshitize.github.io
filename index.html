@@ -64,6 +64,10 @@
             margin: 10px;
             padding: 10px;
         }
+
+        .utcIstConversion{
+            width: 15%;
+        }
         
         #main {
             transition: margin-left .5s;
@@ -79,6 +83,19 @@
             transition: margin-left .5s;
             padding: 16px;
         }
+
+        .utcIstConversion{
+            display: inline-block;
+            position: relative;
+            top: -225px;
+            left: 521px;
+            background-color: black;
+            padding: 5px;
+            margin: auto;
+            text-align: center;
+            width: 222px;
+        }
+
         
         @media screen and (max-height: 450px) {
             .sidenav {
@@ -178,13 +195,23 @@
     </div>
 
 
+    <!-- UTC to IST conversion -->
+    <div class="utcIstConversion">
+        <input type="number" class="form-control" id="converttoUTCorIST" placeholder="Enter UTC or IST">
+        <button type="button" onclick="converttoUTC()" class="btn btn-primary">Convert to UTC</button>
+        <button type="button" onclick="converttoIST()" class="btn btn-success">Convert to IST</button>
+        <input type="text" class="form-control" id="convertedValue" placeholder="" disabled>
+    </div>
+</div>
 
-    <!-- Javascript -->
+
+    <!-- Bootstrap Javascript -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
     </script>
 
-    <script type="text/javascript">
+    <!-- login password on page reload -->
+    <!-- <script type="text/javascript">
         var s = "";
 
         while (s != "aai") {
@@ -198,8 +225,9 @@
 
             }
         }
-    </script>
+    </script> -->
 
+    <!-- Side bar animation -->
     <script>
         function openNav() {
             document.getElementById("mySidenav").style.width = "350px";
@@ -233,6 +261,7 @@
         }
     </script>
 
+    <!-- Pax count in Map -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {
@@ -262,7 +291,138 @@
         }
     </script>
 
+    <!-- convert to IST -->
+    <script>
+        function converttoIST() {
+            let time;
+            let number = document.getElementById("converttoUTCorIST").value;
+            let h = number.slice(0,2)
+            let m = number.slice(2,4)
+            let hours = Number(h);
+            let minutes = Number(m);
+            if(hours<19 && minutes<30){
+                hours = Math.abs(hours + 5);
+                minutes = Math.abs(minutes + 30);
+                number = hours.toString() + minutes.toString()
+                if(number.toString().length<4){
+                time = "0" + hours.toString() + minutes.toString();
+                }
+                else{
+                time = hours.toString() + minutes.toString();
+                }
+            }else if(hours<19 && minutes>=30){
+                hours = Math.abs(hours + 5);
+                minutes = Math.abs((minutes + 30) - 60);
+                number = hours.toString() + minutes.toString();
+                if(hours.toString().length<2){
+                    time = "0" + hours.toString() + minutes.toString();
+                }
+                else if(hours.toString().length>=2 && minutes.toString().length>=2){
+                    time = hours.toString() + minutes.toString();
+                }
+                else if(hours.toString().length>=2 && minutes.toString().length<2){
+                    time = hours.toString() + "0" + minutes.toString();
+                }
+                else if(hours.toString().length>3 && minutes.toString().length<2){
+                    time = hours.toString() + "0" + minutes.toString();
+                }
+            }else if(hours>=19 && minutes<30){
+                minutes = minutes + 30;
+                if(hours==19){
+                    hours = Math.abs(hours + 4);        
+                    time = hours.toString() + minutes.toString();    
+                }else{
+                    hours = Math.abs(24 - (hours + 5));
+                    time = "0" + hours.toString() + minutes.toString();    
+                }
+            }else if(hours>=19 && minutes>=30){
+                hours = Math.abs(24 - hours - 5);
+                minutes = Math.abs(minutes - 30);
+                if(hours == 0 && minutes == 0){
+                    time = "0" + hours.toString() + "0" + minutes.toString();
+                }
+                else if(hours.toString().length<2 && minutes.toString().length<2){
+                    time = "0" + hours.toString() + "0" + minutes.toString();    
+                }
+                else if(hours.toString().length<2 && minutes.toString().length>=2){
+                    time = "0" + hours.toString() + minutes.toString();    
+                }
+                else if(hours.toString().length<2 && minutes.toString().length>=2){
+                    time = "0" + hours.toString() + minutes.toString();    
+                }
+            }
+            
+            document.getElementById("convertedValue").value = time + " Hrs(IST)";
+        }
+               
+    </script>
 
+ <!-- convert to UTC -->
+ <script>
+    function converttoUTC() {
+        let time;
+        let number = document.getElementById("converttoUTCorIST").value;
+        let h = number.slice(0,2)
+        let m = number.slice(2,4)
+        let hours = Number(h);
+        let minutes = Number(m);
+        if(hours<19 && minutes<30){
+            hours = Math.abs(18 + hours);
+            if(hours>=24){
+                hours = Math.abs(24 - hours);
+            }
+            minutes = Math.abs(minutes + 30);
+            number = hours.toString() + minutes.toString()
+            if(number.toString().length<4){
+            time = "0" + hours.toString() + minutes.toString();
+            }
+            else{
+            time = hours.toString() + minutes.toString();
+            }
+        }else if(hours<19 && minutes>=30){
+            hours = Math.abs(hours - 5);
+            minutes = Math.abs(minutes - 30);
+            number = hours.toString() + minutes.toString();
+            if(hours.toString().length<2 && minutes.toString().length<2){
+                time = "0" + hours.toString() + "0" + minutes.toString();
+            }
+            else if(hours.toString().length>=2 && minutes.toString().length>=2){
+                time = hours.toString() + minutes.toString();
+            }
+            else if(hours.toString().length>=2 && minutes.toString().length<2){
+                time = hours.toString() + "0" + minutes.toString();
+            }
+            else if(hours.toString().length>3 && minutes.toString().length<2){
+                time = hours.toString() + "0" + minutes.toString();
+            }
+        }else if(hours>=19 && minutes<30){
+            hours = Math.abs(hours - 6);
+            minutes = Math.abs(minutes - 30);
+            time = hours.toString() + minutes.toString();   
+            
+        }else if(hours>=19 && minutes>=30){
+            hours = Math.abs(24 + hours + 5);
+            minutes = Math.abs(minutes - 30);
+            if(hours == 0 && minutes == 0){
+                time = "0" + hours.toString() + "0" + minutes.toString();
+            }
+            else if(hours.toString().length<2 && minutes.toString().length<2){
+                time = "0" + hours.toString() + "0" + minutes.toString();    
+            }
+            else if(hours.toString().length<2 && minutes.toString().length>=2){
+                time = "0" + hours.toString() + minutes.toString();    
+            }
+            else if(hours.toString().length<2 && minutes.toString().length>=2){
+                time = "0" + hours.toString() + minutes.toString();    
+            }
+        }
+        
+        document.getElementById("convertedValue").value = time + " Hrs(UTC)";
+    }
+           
+</script>
+
+<!-- UTC and IST current time -->
     <script>
         function getdate() {
             var date = new Date();
