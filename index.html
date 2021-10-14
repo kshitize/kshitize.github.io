@@ -200,7 +200,7 @@
         <input type="number" class="form-control" id="converttoUTCorIST" placeholder="Enter UTC or IST">
         <button type="button" onclick="converttoUTC()" class="btn btn-primary">Convert to UTC</button>
         <button type="button" onclick="converttoIST()" class="btn btn-success">Convert to IST</button>
-        <input type="text" class="form-control" id="convertedValue" placeholder="" disabled>
+        <input type="text" class="form-control" id="convertedValue" placeholder="Converted UTC or IST" disabled>
     </div>
 </div>
 
@@ -295,8 +295,14 @@
     <script>
         function converttoIST() {
             let time;
+            let regex = /^[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}$/;
             let number = document.getElementById("converttoUTCorIST").value;
-            let h = number.slice(0,2)
+            if(!regex.test(number)){
+                alert("Incorrect Value");
+                document.getElementById("converttoUTCorIST").value = "";
+                document.getElementById("convertedValue").value = "";
+            }else{
+                let h = number.slice(0,2)
             let m = number.slice(2,4)
             let hours = Number(h);
             let minutes = Number(m);
@@ -311,7 +317,7 @@
                 time = hours.toString() + minutes.toString();
                 }
             }else if(hours<19 && minutes>=30){
-                hours = Math.abs(hours + 5);
+                hours = Math.abs(hours + 6);
                 minutes = Math.abs((minutes + 30) - 60);
                 number = hours.toString() + minutes.toString();
                 if(hours.toString().length<2){
@@ -353,6 +359,8 @@
             }
             
             document.getElementById("convertedValue").value = time + " Hrs(IST)";
+            }
+            
         }
                
     </script>
@@ -361,8 +369,14 @@
  <script>
     function converttoUTC() {
         let time;
+        let regex = /^[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}$/;
         let number = document.getElementById("converttoUTCorIST").value;
-        let h = number.slice(0,2)
+        if(!regex.test(number)){
+                alert("Incorrect Value");
+                document.getElementById("converttoUTCorIST").value = "";
+                document.getElementById("convertedValue").value = "";
+        }else{
+            let h = number.slice(0,2)
         let m = number.slice(2,4)
         let hours = Number(h);
         let minutes = Number(m);
@@ -418,6 +432,8 @@
         }
         
         document.getElementById("convertedValue").value = time + " Hrs(UTC)";
+        }
+        
     }
            
 </script>
